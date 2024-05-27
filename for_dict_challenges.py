@@ -100,7 +100,21 @@ is_male = {
     'Миша': True,
     'Даша': False,
 }
-# ???
+class_counts = {}
+for classroom in school:
+    class_name = classroom['class']
+    boys = 0
+    girls = 0
+    for student in classroom['students']:
+        name = student['first_name']
+        if is_male[name]:
+            boys += 1
+        else:
+            girls += 1
+    class_counts[class_name] = {'boys': boys, 'girls': girls}
+
+for class_name, counts in class_counts.items():
+    print(f"Класс {class_name}: девочки {counts['girls']}, мальчики {counts['boys']}")
 
 
 # Задание 5
@@ -119,5 +133,22 @@ is_male = {
     'Олег': True,
     'Миша': True,
 }
-# ???
+class_counts = {}
+for classroom in school:
+    class_name = classroom['class']
+    boys = 0
+    girls = 0
+    for student in classroom['students']:
+        name = student['first_name']
+        if is_male[name]:
+            boys += 1
+        else:
+            girls += 1
+    class_counts[class_name] = {'boys': boys, 'girls': girls}
+
+most_boys_class = max(class_counts, key=lambda class_name: class_counts[class_name]['boys'])
+most_girls_class = max(class_counts, key=lambda class_name: class_counts[class_name]['girls'])
+
+print(f"Больше всего мальчиков в классе {most_boys_class}")
+print(f"Больше всего девочек в классе {most_girls_class}")
 
