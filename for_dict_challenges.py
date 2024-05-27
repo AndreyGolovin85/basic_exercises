@@ -12,7 +12,15 @@ students = [
     {'first_name': 'Маша'},
     {'first_name': 'Петя'},
 ]
-# ???
+name_counts = {}
+for student in students:
+    if student['first_name'] in name_counts:
+        name_counts[student['first_name']] += 1
+    else:
+        name_counts[student['first_name']] = 1
+
+for key, value in name_counts.items():
+    print(f"{key}: {value}")
 
 
 # Задание 2
@@ -21,12 +29,19 @@ students = [
 # Самое частое имя среди учеников: Маша
 students = [
     {'first_name': 'Вася'},
-    {'first_name': 'Петя'},
     {'first_name': 'Маша'},
     {'first_name': 'Маша'},
     {'first_name': 'Оля'},
+    {'first_name': 'Петя'},
 ]
-# ???
+name_counts = {}
+for student in students:
+    if student['first_name'] in name_counts:
+        name_counts[student['first_name']] += 1
+    else:
+        name_counts[student['first_name']] = 1
+
+print(f"Самое частое имя среди учеников: {max(name_counts, key=lambda name: name_counts[name])}")
 
 
 # Задание 3
@@ -44,14 +59,27 @@ school_students = [
         {'first_name': 'Маша'},
         {'first_name': 'Маша'},
         {'first_name': 'Оля'},
-    ],[  # это – третий класс
+    ],
+    [  # это – третий класс
         {'first_name': 'Женя'},
         {'first_name': 'Петя'},
         {'first_name': 'Женя'},
         {'first_name': 'Саша'},
     ],
 ]
-# ???
+name_counts_by_class = {}
+for class_index, students in enumerate(school_students):
+    name_counts = {}
+    for student in students:
+        name = student['first_name']
+        if name in name_counts:
+            name_counts[name] += 1
+        else:
+            name_counts[name] = 1
+    name_counts_by_class[class_index + 1] = name_counts
+
+for key, value in name_counts_by_class.items():
+    print(f"Самое частое имя в классе {key}: {max(value, key=lambda name: value[name])}")
 
 
 # Задание 4
