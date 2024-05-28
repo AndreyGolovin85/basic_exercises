@@ -66,5 +66,46 @@ def generate_chat_history():
     return messages
 
 
+def user_id_by_max_messages(messages: list) -> str:
+    """
+    Вывести айди пользователя, который написал больше всех сообщений.
+    :param messages: list
+    :return: str
+    """
+    count_id_users = {}
+    for message in messages:
+        id_user = message["id"]
+        if id_user in count_id_users:
+            count_id_users[id_user] += 1
+        else:
+            count_id_users[id_user] = 1
+
+    return f"Написал больше всех сообщений: {max(count_id_users, key=lambda user: count_id_users[user])}."
+
+
+def user_id_message_where_answer(messages: list) -> str:
+    """
+    Вывести айди пользователя, на сообщения которого больше всего отвечали.
+    :param messages:
+    :return: str
+    """
+    count_id_users = {}
+    for message in messages:
+        print(message["id"], message["reply_for"])
+        id_user = message["reply_for"]
+        if id_user in count_id_users:
+            if id_user is None:
+                count_id_users[id_user] = 0
+            else:
+                count_id_users[id_user] += 1
+        else:
+            count_id_users[id_user] = 1
+    print(count_id_users)
+    return f"Пользователь, на сообщения которого больше всего отвечали: " \
+           f"{max(count_id_users, key=lambda user: count_id_users[user])}."
+
+
 if __name__ == "__main__":
-    print(generate_chat_history())
+    # print(generate_chat_history())
+    print(user_id_by_max_messages(generate_chat_history()))
+    print(user_id_message_where_answer(generate_chat_history()))
