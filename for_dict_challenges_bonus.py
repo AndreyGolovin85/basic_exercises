@@ -67,7 +67,7 @@ def user_id_by_max_messages(messages: list) -> str:
     """
     count_id_users = {}
     for message in messages:
-        id_user = message["id"]
+        id_user = message["sent_by"]
         if id_user in count_id_users:
             count_id_users[id_user] += 1
         else:
@@ -79,16 +79,16 @@ def user_id_by_max_messages(messages: list) -> str:
 def user_id_message_where_answer(messages: list) -> str:
     """
     Вывести айди пользователя, на сообщения которого больше всего отвечали.
-    :param messages:
+    :param messages: list
     :return: str
     """
     count_id_users = {}
     for message in messages:
-        print(message["id"], message["reply_for"])
-        id_user = message["reply_for"]
+        id_user = message["sent_by"]
+        reply_for = message["reply_for"]
         if id_user in count_id_users:
-            if id_user is None:
-                count_id_users[id_user] = 0
+            if reply_for is None:
+                count_id_users[id_user] += 0
             else:
                 count_id_users[id_user] += 1
         else:
@@ -97,7 +97,72 @@ def user_id_message_where_answer(messages: list) -> str:
            f"{max(count_id_users, key=lambda user: count_id_users[user])}."
 
 
+def user_id_message_seen_by(messages: list) -> str:
+    """
+    Вывести айди пользователей, сообщения которых видело больше всего уникальных пользователей.
+    :param messages: list
+    :return: str
+    """
+    users_seen_messages = {}
+    for message in messages:
+        if message['sent_by'] not in users_seen_messages:
+            users_seen_messages[message['sent_by']] = []
+
+    for message in messages:
+        users_seen_messages[message['sent_by']] += message['seen_by']
+
+    count_users_seen_messages = {}
+    for user_id, seen_by in users_seen_messages.items():
+        count_users_seen_messages[user_id] = len(set(seen_by))
+
+    return ", ".join([str(key) for key in count_users_seen_messages
+                      if count_users_seen_messages[key] == max(count_users_seen_messages.values())])
+
+
+def user_id_sent_at(messages: list) -> str:
+    """
+    Определить, когда в чате больше всего сообщений: утром (до 12 часов), днём (12-18 часов) или вечером (после 18
+    часов). morning, afternoon, evening.
+    :param messages: list
+    :return: str
+    """
+    messages_chat_sent_at = {}
+    for message in messages:
+        date_time = message["sent_at"]
+        hour = date_time.hour
+        # Здесь пока ничего лучше не придумал.
+        ######################################################
+        morning = "morning"
+        afternoon = "afternoon"
+        evening = "evening"
+        if 6 <= hour < 12:
+            if morning in messages_chat_sent_at:
+                messages_chat_sent_at[morning] += 1
+            else:
+                messages_chat_sent_at[morning] = 1
+
+        if 12 <= hour < 18:
+            if afternoon in messages_chat_sent_at:
+                messages_chat_sent_at[afternoon] += 1
+            else:
+                messages_chat_sent_at[afternoon] = 1
+
+        if hour <= 18:
+            if evening in messages_chat_sent_at:
+                messages_chat_sent_at[evening] += 1
+            else:
+                messages_chat_sent_at[evening] = 1
+        #####################################################
+
+    return f"В чате больше всего сообщений: " \
+           f"{max(messages_chat_sent_at, key=lambda time: messages_chat_sent_at[time])}."
+
+
 if __name__ == "__main__":
     # print(generate_chat_history())
     print(user_id_by_max_messages(generate_chat_history()))
     print(user_id_message_where_answer(generate_chat_history()))
+    print(
+        f"Айди пользователей, сообщения которых видело больше всего уникальных пользователей: "
+        f"{user_id_message_seen_by(generate_chat_history())}")
+    print(user_id_sent_at(generate_chat_history()))
