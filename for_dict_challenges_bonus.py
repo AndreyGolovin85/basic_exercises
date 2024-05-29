@@ -147,7 +147,7 @@ def user_id_sent_at(messages: list) -> str:
             else:
                 messages_chat_sent_at[afternoon] = 1
 
-        if hour <= 18:
+        if hour >= 18:
             if evening in messages_chat_sent_at:
                 messages_chat_sent_at[evening] += 1
             else:
