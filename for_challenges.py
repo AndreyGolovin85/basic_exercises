@@ -29,9 +29,10 @@ is_male = {
 names = ['Оля', 'Петя', 'Вася', 'Маша']
 for name in names:
     if not is_male[name]:
-        print(f"{name}: женский")
-    else:
         print(f"{name}: мужской")
+    else:
+        print(f"{name}: женский")
+
 
 
 # Задание 4
