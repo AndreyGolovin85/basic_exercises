@@ -48,8 +48,8 @@ groups = [
     ['Оля', 'Петя', 'Гриша'],
 ]
 print(f"Всего {len(groups)} группы.")
-for group in groups:
-    print(f"Группа {groups.index(group) + 1}: {len(group)} ученика.")
+for group_num, group in enumerate(groups):
+    print(f"Группа {group_num + 1}: {len(group)} ученика.")
 
 
 # Задание 5
