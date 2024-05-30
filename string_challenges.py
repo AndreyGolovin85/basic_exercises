@@ -9,7 +9,7 @@ print(word.lower().count('а'))
 
 # Вывести количество гласных букв в слове
 word = 'Архангельск'
-vse_gls = ["а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я"]
+vse_gls = "аеёиоуыэюя"
 count = 0
 for letter in word.lower():
     if letter in vse_gls:
