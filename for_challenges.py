@@ -63,5 +63,5 @@ groups = [
     ['Оля', 'Петя', 'Гриша'],
     ['Вася', 'Маша', 'Саша', 'Женя'],
 ]
-for group in groups:
-    print(f"Группа {groups.index(group) + 1}: {', '.join(group)}")
+for group_num, group in enumerate(groups):
+    print(f"Группа {group_num + 1}: {', '.join(group)}")
