@@ -73,7 +73,7 @@ def user_id_by_max_messages(messages: list) -> str:
         else:
             count_id_users[id_user] = 1
 
-    return f"Написал больше всех сообщений: {max(count_id_users, key=lambda user: count_id_users[user])}."
+    return f"{max(count_id_users, key=lambda user: count_id_users[user])}"
 
 
 def user_id_message_where_answer(messages: list) -> str:
@@ -93,8 +93,7 @@ def user_id_message_where_answer(messages: list) -> str:
                 count_id_users[id_user] += 1
         else:
             count_id_users[id_user] = 1
-    return f"Пользователь, на сообщения которого больше всего отвечали: " \
-           f"{max(count_id_users, key=lambda user: count_id_users[user])}."
+    return f"{max(count_id_users, key=lambda user: count_id_users[user])}"
 
 
 def user_id_message_seen_by(messages: list) -> str:
@@ -154,15 +153,56 @@ def user_id_sent_at(messages: list) -> str:
                 messages_chat_sent_at[evening] = 1
         #####################################################
 
-    return f"В чате больше всего сообщений: " \
-           f"{max(messages_chat_sent_at, key=lambda time: messages_chat_sent_at[time])}."
+    return f"{max(messages_chat_sent_at, key=lambda time: messages_chat_sent_at[time])}."
+
+
+def create_message_id_dict(messages: list) -> dict:
+    message_reply = {}
+    for message in messages:
+        message_reply[message['id']] = message['reply_for']
+    return message_reply
+
+
+def find_message_tree(message_reply: dict, message_id: str, answers: list) -> list:
+    for key, value in message_reply.items():
+        if message_id == value:
+            answers.append(key)
+            find_message_tree(message_reply, key, answers)
+    return answers
+
+
+def message_reply(messages: list) -> dict:
+    message_reply = create_message_id_dict(messages)
+    messages_tree = {}
+    for message_id in message_reply:
+        answers = []
+        messages_tree[message_id] = find_message_tree(message_reply, message_id, answers)
+    return messages_tree
+
+
+def max_answers(messages: list) -> str:
+    """
+    Функция получает словарь и возвращает идентификатор сообщения,
+    который стал началом для самых длинных тредов (цепочек ответов).
+    :param messages: list
+    :return: str
+    """
+    message_tree = message_reply(messages)
+    most_reply_id = ""
+    num_of_answers = 0
+    for key, value in message_tree.items():
+        if len(value) > num_of_answers:
+            num_of_answers = len(value)
+            most_reply_id = key
+    return most_reply_id
 
 
 if __name__ == "__main__":
-    # print(generate_chat_history())
-    print(user_id_by_max_messages(generate_chat_history()))
-    print(user_id_message_where_answer(generate_chat_history()))
-    print(
-        f"Айди пользователей, сообщения которых видело больше всего уникальных пользователей: "
-        f"{user_id_message_seen_by(generate_chat_history())}")
-    print(user_id_sent_at(generate_chat_history()))
+    print(f"Написал больше всех сообщений: {user_id_by_max_messages(generate_chat_history())}")
+    print(f"Пользователь, на сообщения которого больше всего отвечали: "
+          f"{user_id_message_where_answer(generate_chat_history())}")
+    print(f"Айди пользователей, сообщения которых видело больше всего уникальных пользователей: "
+          f"{user_id_message_seen_by(generate_chat_history())}")
+    print(f"В чате больше всего сообщений: {user_id_sent_at(generate_chat_history())}")
+    print(f"Идентификатор сообщения, который стал началом для самых длинных тредов: "
+          f"{max_answers(generate_chat_history())}")
